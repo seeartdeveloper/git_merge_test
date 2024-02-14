@@ -510,8 +510,6 @@ class DbManagerModel
         }
 
 
-        $result_query_rel = '';
-
         $rel_select_arr = array();
 
         //Check for relation fields
@@ -728,40 +726,7 @@ class DbManagerModel
                 
 
 
-                if ($column->Type == 'datetime') {
-
-
-                    $fr_date = $request->getPost('fr_date');
-                    $to_date = $request->getPost('to_date');
-
-                    if ($fr_date || $to_date) {
-
-                        $searchLikeTempQuery = '';
-                        $searchLikeTempQueryArr = [];
-                        $searchLikeTempQueryArr[] = $this->generateDateClause($table_search, $column->Field, $fr_date, $to_date);
-                    }
-
-                    
-
-                
-                }else{
-
-                    //For loop is required when search must be performed in multiple relational columns from another table
-                    $searchLikeTempQuery = '';
-                    $searchLikeTempQueryArr = [];
-                    foreach ($col_search as $colToSearch) {
-
-                        if (isset($fields[$column->Field]['filter']) && $fields[$column->Field]['filter']){
-
-                            $searchLikeTempQueryArr[] = $this->generateEqualClause($table_search, $table_search_name, $colToSearch, $request->getPost($column->Field));
-
-                        }else{
-                            $searchLikeTempQueryArr[] = $this->generateLikeClause($table_search, $table_search_name, $colToSearch, $request->getPost($column->Field));
-                        }
-                        
-                    }
-
-                }
+      
 
                 if (isset($fields[$column->Field]['callback']) && ($fields[$column->Field]['callback'] == 'callback_DecryptToCheck' || $fields[$column->Field]['callback'] == 'callback_sms_modal')) {
                     $table_search = $table;  
@@ -777,6 +742,44 @@ class DbManagerModel
                     $searchLikeTempQuery = "($searchLikeTempQuery)";
                 } else
                     $searchLikeTempQuery = $searchLikeTempQueryArr[0];
+
+
+
+                    if ($column->Type == 'datetime') {
+
+
+                        $fr_date = $request->getPost('fr_date');
+                        $to_date = $request->getPost('to_date');
+    
+                        if ($fr_date || $to_date) {
+    
+                            $searchLikeTempQuery = '';
+                            $searchLikeTempQueryArr = [];
+                            $searchLikeTempQueryArr[] = $this->generateDateClause($table_search, $column->Field, $fr_date, $to_date);
+                        }
+    
+                        
+    
+                    
+                    }else{
+    
+                        //For loop is required when search must be performed in multiple relational columns from another table
+                        $searchLikeTempQuery = '';
+                        $searchLikeTempQueryArr = [];
+                        foreach ($col_search as $colToSearch) {
+    
+                            if (isset($fields[$column->Field]['filter']) && $fields[$column->Field]['filter']){
+    
+                                $searchLikeTempQueryArr[] = $this->generateEqualClause($table_search, $table_search_name, $colToSearch, $request->getPost($column->Field));
+    
+                            }else{
+                                $searchLikeTempQueryArr[] = $this->generateLikeClause($table_search, $table_search_name, $colToSearch, $request->getPost($column->Field));
+                            }
+                            
+                        }
+    
+                    }
+
 
 
                 $tempQuery .= $searchLikeTempQuery;
@@ -810,7 +813,7 @@ class DbManagerModel
             //$this->db->order_by($pk, 'DESC');
         }
 
-        $result_query = rtrim($result_query, ',');
+        $result_qsdsuery = rtrim($result_query, ',');
 
         if ($offset || $per_page) {
             
@@ -823,7 +826,7 @@ class DbManagerModel
 
         $page_items = $this->db->query($result_query)->getResult();
         
-        return $page_items;
+        return $page_itedsadsadsadms;
     }
 
     public function getRelationItems($table, $where = null, $orderField = null, $orderDirection = null)
